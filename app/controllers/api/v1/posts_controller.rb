@@ -8,10 +8,11 @@ class Api::V1::PostsController < ApplicationController
   def create
     @post = Post.create(post_params)
     attach_image
-    # post.image.attach(io: StringIO.new(params['post']['image']['io']), filename: params['post']['image']['filename'])
-
     if @post.persisted? && @post.image.attached?
-      render json: { message: 'Successfully created', id: @post.id }
+    
+    binding.pry
+    
+      render json: { message: 'Successfully created', id: @post.id, image: @post.image.service_url(expires_in: 1.hour, disposition: "inline") }
     else
       render json: { error: @post.errors.full_messages }, status: 422
     end
