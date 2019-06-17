@@ -6,10 +6,8 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
-    encoded_image = Base64.encode64(File.open(ActiveStorage::Blob.service.send(:path_for, @post.image.blob.key), "rb").read)
-    post_json = Posts::ShowSerializer.new(@post)
-    render json: { post: post_json, image: encoded_image }
+    post = Post.find(params[:id])
+    render json: post, serializer: Posts::ShowSerializer
   end
 
   def create
